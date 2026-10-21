@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title>Суфлёр</title>
-<meta name="description" content="Телесуфлёр с записью видео и фото без водяных знаков">
+<meta name="description" content="Телесуфлёр с записью видео и фото без водяных знаков, ИИ-сценариями и подсказками">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -49,6 +49,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 input,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
 svg{display:block}
+a{color:var(--accent)}
 .muted{color:var(--muted)}
 .small{font-size:13px}
 
@@ -60,14 +61,22 @@ main{max-width:640px;margin:0 auto;padding-top:env(safe-area-inset-top,0px);padd
 .tab-head h1{margin:0;font:600 26px/1.15 var(--font-display);letter-spacing:-.01em;text-wrap:balance}
 .note{margin:0 0 14px;font-size:14px;color:var(--muted);max-width:60ch}
 
-.btn-accent{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:var(--accent-ink);font-weight:600;border-radius:14px;padding:13px 18px}
+.btn-accent{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:var(--accent-ink);font-weight:600;border-radius:14px;padding:13px 18px;text-decoration:none}
 .btn-accent.sm{padding:8px 14px 8px 11px;font-size:15px;border-radius:999px}
 .btn-accent svg{width:18px;height:18px}
-.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--raised);border-radius:14px;padding:14px 16px;font-weight:500}
+.btn-accent:disabled{opacity:.45}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--raised);border-radius:14px;padding:14px 16px;font-weight:500;color:var(--fg);text-decoration:none;text-align:center}
+.btn.sm{padding:9px 12px;font-size:14px;border-radius:11px}
+.btn:disabled{opacity:.45}
 .wide{width:100%;padding:15px;font-size:17px}
 .link{color:var(--accent);font-weight:500;padding:10px 4px}
 .danger{color:var(--rec)}
-.btn-accent:active,.btn:active,.link:active{opacity:.75}
+.btn-accent:active,.btn:active,.link:active,.quick:active{opacity:.75}
+.icon-btn{width:36px;height:36px;flex:none;border-radius:50%;display:grid;place-items:center;color:var(--muted);background:var(--raised)}
+.icon-btn svg{width:18px;height:18px}
+.inp{width:100%;background:var(--raised);border:1px solid transparent;border-radius:12px;padding:11px 13px;font-size:16px;line-height:1.4;color:var(--fg);outline:none;resize:vertical}
+.inp::placeholder{color:var(--muted)}
+.inp:focus{border-color:var(--accent)}
 
 /* search */
 .search{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:14px;padding:0 14px;height:46px;margin-bottom:14px;color:var(--muted)}
@@ -78,10 +87,18 @@ main{max-width:640px;margin:0 auto;padding-top:env(safe-area-inset-top,0px);padd
 
 /* install tip */
 .tip{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 10px 14px 16px;margin-bottom:14px}
+.tip>div{flex:1;min-width:0}
 .tip b{display:block;margin-bottom:2px}
 .tip p{margin:0;font-size:14px;color:var(--muted)}
-.tip button{width:32px;height:32px;display:grid;place-items:center;color:var(--muted);flex:none}
-.tip button svg{width:18px;height:18px}
+.tip .tip-x{width:32px;height:32px;display:grid;place-items:center;color:var(--muted);flex:none}
+.tip .tip-x svg{width:18px;height:18px}
+.tip .btn-accent{flex:none;align-self:center;margin-right:4px}
+
+/* quick actions */
+.quick-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.quick{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:14px;padding:13px 14px;font-weight:500;font-size:15px;text-align:left;min-width:0}
+.quick svg{width:20px;height:20px;flex:none;color:var(--accent)}
+.quick span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* script list */
 .script-list{display:grid;gap:10px}
@@ -118,15 +135,23 @@ main{max-width:640px;margin:0 auto;padding-top:env(safe-area-inset-top,0px);padd
 .preview .pv-text{position:relative;padding:14px 20px 14px 26px;color:#fff;font-weight:500;text-shadow:0 1px 2px rgba(0,0,0,.6);white-space:pre-wrap;overflow-wrap:break-word}
 mark{background:none;color:var(--accent)}
 .set-group{margin:0 0 22px}
-.set-group h2{margin:0 0 8px 4px;font:600 12px var(--font-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.set-group>h2,.group-head h2{margin:0 0 8px 4px;font:600 12px var(--font-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.group-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.group-head .link{padding:4px}
 .set-card{background:var(--surface);border-radius:var(--r);overflow:hidden}
 .set-row{padding:13px 16px;display:grid;gap:10px;border-top:1px solid var(--line)}
 .set-row:first-child{border-top:0}
+.set-row>label{font-weight:500}
 .set-head{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:31px}
 .set-head label,.set-head span{font-weight:500}
 .set-val{color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
 .hint{margin:-4px 0 0;font-size:13px;color:var(--muted)}
+.hint.ok{color:var(--ok)}
+.hint.err{color:var(--rec)}
 .about{margin:0;font-size:14px;color:var(--muted)}
+.key-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.key-row .inp{flex:1;min-width:0}
+.key-row .hint{margin:0;flex:1;min-width:140px}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:none;margin:0}
 input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--raised-2)}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--fg);margin-top:-11px;box-shadow:0 2px 8px rgba(0,0,0,.45)}
@@ -139,9 +164,10 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
 .switch::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:var(--fg);box-shadow:0 2px 6px rgba(0,0,0,.4);transition:transform .2s}
 .switch:checked{background:var(--accent)}
 .switch:checked::after{transform:translateX(20px)}
+.check-row{display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:500}
 
 /* tab bar */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(3,1fr);padding:6px max(12px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:rgba(18,17,16,.88);-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);border-top:1px solid var(--line)}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));background:rgba(18,17,16,.88);-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);border-top:1px solid var(--line)}
 .tabbar button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0 4px;color:var(--muted);font-size:11.5px;font-weight:500}
 .tabbar button svg{width:25px;height:25px}
 .tabbar button[aria-current=page]{color:var(--accent)}
@@ -156,8 +182,54 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
 .ed-title::placeholder,#edText::placeholder{color:var(--muted)}
 #edText{flex:1;min-height:0;width:100%;resize:none;background:none;border:0;outline:none;padding:14px 0;font-size:18px;line-height:1.55}
 .ed-foot{display:grid;gap:10px;padding:10px 0 12px;border-top:1px solid var(--line)}
-.ed-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
-.ed-meta label{color:var(--accent);font-weight:500;cursor:pointer;padding:4px 0}
+.ed-meta{display:flex;justify-content:space-between;align-items:center;gap:8px 14px;flex-wrap:wrap;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.ed-meta label,.ed-meta button{color:var(--accent);font-weight:500;cursor:pointer;padding:4px 0;font-size:13px}
+.ed-tools{display:flex;gap:14px}
+
+/* ---------- AI sheet ---------- */
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sheet-head h2{margin:0;font:600 19px/1.2 var(--font-display)}
+.fld{display:grid;gap:6px}
+.fld>span,.fld-l{font-size:13px;font-weight:600;color:var(--muted)}
+.ai-actions{display:grid;gap:8px}
+.ai-actions button{text-align:left;background:var(--raised);border-radius:12px;padding:12px 14px;font-weight:500}
+.ai-actions button small{display:block;font-size:13px;font-weight:400;color:var(--muted)}
+.ai-out{display:grid;gap:10px;border-top:1px solid var(--line);padding-top:12px}
+.ai-out-head{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.ai-out-text{max-height:38vh;max-height:38dvh;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;white-space:pre-wrap;overflow-wrap:break-word;font-size:16px;line-height:1.5}
+.ai-out-text.err{color:var(--rec)}
+.ai-out-text.wait{color:var(--muted)}
+.nokey{display:grid;gap:10px;background:var(--raised);border-radius:14px;padding:14px}
+.nokey p{margin:0;font-size:14px;color:var(--muted)}
+.nokey .rv-row .btn{background:var(--raised-2)}
+
+/* ---------- hints ---------- */
+.status-chip{font-size:13px;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--raised);color:var(--muted);white-space:nowrap}
+.status-chip.on{background:rgba(255,69,58,.16);color:#FF8A82}
+.status-chip.busy{background:rgba(242,181,68,.16);color:var(--accent)}
+.h-card{background:var(--surface);border-radius:var(--r);padding:16px;display:grid;gap:10px;margin-bottom:12px}
+.h-q{margin:0;font-size:14px;color:var(--muted);overflow-wrap:anywhere}
+.h-a{font-size:21px;line-height:1.45;font-weight:500;white-space:pre-wrap;overflow-wrap:break-word;min-height:2.9em}
+.h-a.empty{color:var(--muted);font-size:16px;font-weight:400;min-height:0}
+.h-a.err{color:var(--rec);font-size:16px;font-weight:400;min-height:0}
+.h-actions{display:flex;flex-wrap:wrap;gap:0 18px;margin:-6px 0 -8px}
+.h-heard{font-size:14px;margin:0 0 12px;min-height:1.5em;overflow-wrap:anywhere;color:var(--muted)}
+.h-heard b{color:var(--fg);font-weight:500}
+#hMic.on{background:var(--rec);color:#fff}
+.h-ask{display:flex;gap:8px;margin:12px 0 24px}
+.h-ask .inp{flex:1;min-width:0}
+.h-hist{display:grid;gap:8px}
+.h-item{background:var(--surface);border-radius:14px;padding:12px 14px;display:grid;gap:6px}
+.h-item b{font-size:14px;font-weight:600;color:var(--muted);overflow-wrap:anywhere}
+.h-item p{margin:0;font-size:15px;white-space:pre-wrap;overflow-wrap:break-word}
+.h-item .h-item-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.h-item .link{padding:2px 0;font-size:14px}
+#hStage{position:fixed;inset:0;z-index:45;background:#0B0A09;color:#fff;display:flex;flex-direction:column}
+.hs-bar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 8px) max(12px,env(safe-area-inset-right,0px)) 8px max(12px,env(safe-area-inset-left,0px))}
+.hs-bar .grp{display:flex;gap:8px}
+.hs-body{flex:1;min-height:0;overflow:auto;padding:8px max(24px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 40px) max(24px,env(safe-area-inset-left,0px))}
+.hs-q{color:rgba(255,255,255,.55);font-size:.5em;margin:0 0 .7em;line-height:1.35}
+.hs-a{white-space:pre-wrap;overflow-wrap:break-word;font-weight:500;line-height:1.4}
 
 /* ---------- prompter stage ---------- */
 #stage{position:fixed;inset:0;z-index:40;background:#000;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -168,18 +240,19 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
 .flash{position:absolute;inset:0;z-index:7;background:#fff;opacity:0;pointer-events:none}
 .flash.go{animation:flash .4s ease-out}
 @keyframes flash{from{opacity:.85}to{opacity:0}}
-.stage-top{position:absolute;left:0;right:0;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:8px;height:calc(env(safe-area-inset-top,0px) + 58px);padding:calc(env(safe-area-inset-top,0px) + 6px) max(12px,env(safe-area-inset-right,0px)) 8px max(12px,env(safe-area-inset-left,0px))}
-.top-right{display:flex;gap:8px;flex:none}
-.stage-top,.stage-bottom,.ctrl-row,.left-ctrl,.mode-row,.main-row{pointer-events:none}
-.stage-top button,.stage-top .pill,.stage-bottom button,.stage-bottom .stepper{pointer-events:auto}
+.stage-top{position:absolute;left:0;right:0;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:8px;height:calc(env(safe-area-inset-top,0px) + 58px);padding:calc(env(safe-area-inset-top,0px) + 6px) max(10px,env(safe-area-inset-right,0px)) 8px max(10px,env(safe-area-inset-left,0px))}
+.top-right{display:flex;gap:6px;flex:none}
+#stage .stage-top,#stage .stage-bottom,#stage .ctrl-row,#stage .left-ctrl,#stage .mode-row,#stage .main-row{pointer-events:none}
+#stage .stage-top button,#stage .stage-top .pill,#stage .stage-bottom button,#stage .stage-bottom .stepper{pointer-events:auto}
 .round{width:44px;height:44px;flex:none;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff}
+.stage-top .round{width:40px;height:40px}
 .round svg{width:22px;height:22px}
 .round.lg{width:54px;height:54px}
 .round.lg svg{width:24px;height:24px}
-.round.fmt{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.round.fmt{font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.01em}
 .round[aria-pressed=true]{background:var(--accent);color:var(--accent-ink)}
 .round:disabled{opacity:.35}
-.pill{display:inline-flex;align-items:center;gap:8px;min-width:0;min-height:32px;padding:5px 14px;border-radius:999px;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font-size:14px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden}
+.pill{display:inline-flex;align-items:center;gap:8px;min-width:0;min-height:32px;padding:5px 12px;border-radius:999px;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font-size:14px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden}
 .pill span{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .pill .dot{display:none;flex:none;width:9px;height:9px;border-radius:50%;background:var(--rec)}
 .pill.is-rec{background:rgba(255,69,58,.22)}
@@ -215,10 +288,10 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
 .rec span{width:62px;height:62px;border-radius:50%;background:var(--rec);transition:width .2s,height .2s,border-radius .2s,background .2s}
 .rec.photo span{background:#fff}
 .rec.photo:active span{width:54px;height:54px}
-#stage.recording .rec span{width:30px;height:30px;border-radius:8px}
-#stPlay .i-pause{display:none}
-#stPlay.on .i-pause{display:block}
-#stPlay.on .i-play{display:none}
+#stage.recording .rec span,.rec.on span{width:30px;height:30px;border-radius:8px}
+.play-btn .i-pause{display:none}
+.play-btn.on .i-pause{display:block}
+.play-btn.on .i-play{display:none}
 .countdown{position:absolute;inset:0;z-index:6;display:grid;place-items:center;align-content:center;gap:10px;background:rgba(0,0,0,.18);color:#fff}
 .countdown b{font:600 150px/1 var(--font-display);text-shadow:0 6px 40px rgba(0,0,0,.5)}
 .countdown b.pop{animation:pop .9s ease-out}
@@ -239,7 +312,8 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
 
 /* ---------- modals ---------- */
 .modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.72);display:flex;align-items:flex-end;justify-content:center;padding-top:env(safe-area-inset-top,0px)}
-.modal-card{width:100%;max-width:520px;max-height:100%;overflow:auto;background:var(--surface);border-radius:24px 24px 0 0;display:grid;gap:12px;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal-card{width:100%;max-width:520px;max-height:100%;overflow:auto;background:var(--surface);border-radius:24px 24px 0 0;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-content:start;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal-card>*{min-width:0}
 #rvVideo,#rvImg{width:100%;max-height:52vh;max-height:52dvh;border-radius:14px;background:#000;object-fit:contain;display:block}
 .rv-meta{display:grid;gap:2px}
 .rv-meta b{font-size:17px;overflow-wrap:anywhere}
@@ -249,6 +323,55 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
 #confirm .modal-card{gap:16px}
 #confirm p{margin:4px 0 0;font-size:17px;font-weight:500;text-align:center}
 .btn.danger-fill{background:var(--rec);color:#fff;font-weight:600}
+.steps{margin:0;padding-left:1.4em;display:grid;gap:10px;font-size:15px}
+.steps li::marker{color:var(--accent);font-weight:700}
+.steps b{font-weight:600}
+
+/* remote sheet (on the prompter) */
+.qr-box{background:#fff;border-radius:16px;padding:12px;width:min(240px,100%);aspect-ratio:1;max-width:100%;margin:4px auto 0;display:grid;place-items:center;color:#5a5650;font-size:14px;text-align:center}
+.qr-box img{width:100%;height:100%;image-rendering:pixelated;display:block}
+.rm-status{margin:0;text-align:center;font-weight:500}
+.rm-status.ok{color:var(--ok)}
+.rm-status.err{color:var(--rec)}
+.link-row{display:flex;gap:8px;align-items:center;background:var(--raised);border-radius:12px;padding:6px 6px 6px 12px}
+.link-row code{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;color:var(--muted)}
+.link-row .btn{background:var(--raised-2)}
+
+/* ---------- remote client (second phone) ---------- */
+body.remote-mode main,body.remote-mode .tabbar{display:none}
+#remoteApp{max-width:520px;margin:0 auto;display:grid;gap:14px;align-content:start;padding-top:calc(env(safe-area-inset-top,0px) + 6px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.rc-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:6px}
+.rc-head .brand{padding-top:0}
+.conn{font-size:13px;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--raised);color:var(--muted);white-space:nowrap}
+.conn.ok{color:var(--ok);background:rgba(98,212,142,.12)}
+.conn.err{color:#FF8A82;background:rgba(255,69,58,.14)}
+.rc-msg{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14px;color:var(--muted)}
+.rc-status{background:var(--surface);border-radius:var(--r);padding:14px 16px;display:grid;gap:2px}
+.rc-status b{font:600 20px/1.3 var(--font-display);font-variant-numeric:tabular-nums}
+.rc-status b.rec-on{color:#FF8A82}
+.rc-status span{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+.rc-main{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;justify-items:center;gap:8px;padding:6px 0}
+.rc-play{width:96px;height:96px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center}
+.rc-play svg{width:40px;height:40px}
+.rc-btn{width:64px;height:64px;border-radius:50%;background:var(--raised);display:grid;place-items:center;color:var(--fg)}
+.rc-btn svg{width:24px;height:24px}
+.rc-cap{font-size:12px;color:var(--muted);text-align:center;margin-top:6px}
+.rc-col{display:grid;justify-items:center}
+.rc-steps{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.rc-steps .stepper{background:var(--surface);color:var(--fg);-webkit-backdrop-filter:none;backdrop-filter:none}
+.rc-steps .stepper small{color:var(--muted)}
+.rc-rec{display:grid;justify-items:center;gap:12px;background:var(--surface);border-radius:var(--r);padding:16px}
+.rc-rec .mode-row button{color:var(--muted);text-shadow:none}
+.rc-rec .mode-row button[aria-checked=true]{color:var(--accent)}
+.rc-send{background:var(--surface);border-radius:var(--r);padding:12px 16px}
+.rc-send summary{font-weight:600;cursor:pointer;padding:4px 0}
+.rc-send-in{display:grid;gap:10px;padding-top:10px}
+#rcScreen{position:fixed;inset:0;z-index:30;background:#000;touch-action:none}
+.rc-view{position:absolute;inset:0;overflow:hidden}
+.rc-view .ptext{line-height:1.35}
+.rc-bar{position:absolute;left:0;right:0;bottom:0;z-index:4;display:flex;justify-content:center;align-items:center;gap:10px;padding:24px max(12px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 14px) max(12px,env(safe-area-inset-left,0px));background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.75));transition:opacity .25s}
+.rc-bar.hide{opacity:0;pointer-events:none}
+.rc-bar .stepper{background:rgba(255,255,255,.1)}
 
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 92px);z-index:60;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);background:var(--raised-2);color:var(--fg);padding:11px 16px;border-radius:14px;font-size:14px;box-shadow:0 8px 30px rgba(0,0,0,.45);text-align:center}
 .toast.top{bottom:auto;top:calc(env(safe-area-inset-top,0px) + 70px)}
@@ -270,7 +393,11 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
     </div>
     <div id="installTip" class="tip" hidden>
       <div><b>Поставь на экран «Домой»</b><p>В Safari нажми «Поделиться» → «На экран „Домой“». Суфлёр откроется как приложение, и записи не сотрутся.</p></div>
-      <button id="tipClose" type="button" aria-label="Скрыть подсказку"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <button id="tipClose" class="tip-x" type="button" aria-label="Скрыть подсказку"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="quick-row">
+      <button id="pasteScript" class="quick" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4.5h6V3H9zM9 11h6M9 15h4"/></svg><span>Вставить текст</span></button>
+      <button id="aiNewScript" class="quick" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M18.5 15l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg><span>Написать с ИИ</span></button>
     </div>
     <label class="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
@@ -282,6 +409,61 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
       <div><b>Пока пусто</b><p>Вставь текст ролика — и можно сразу записывать.</p></div>
       <button id="newScript2" class="btn-accent" type="button">Создать сценарий</button>
     </div>
+  </section>
+
+  <!-- Подсказки -->
+  <section id="tab-hints" hidden>
+    <div class="tab-head"><h1>Подсказки</h1><span id="hStatus" class="status-chip">Выключено</span></div>
+    <p class="note">Слушает собеседника, ловит вопросы и сразу пишет ответ, который можно прочитать вслух. Для эфиров с гостем, подкастов, интервью и созвонов.</p>
+    <div id="hNoKey" class="tip" hidden>
+      <div><b>Нужен ключ ИИ</b><p>Подсказки отвечают за пару секунд, поэтому работают только с ключом. У Gemini он бесплатный.</p></div>
+      <button id="hConnect" class="btn-accent sm" type="button">Подключить</button>
+    </div>
+    <div class="h-card">
+      <p id="hQ" class="h-q">Здесь появится вопрос</p>
+      <div id="hA" class="h-a empty">Нажми «Слушать» или напиши вопрос ниже.</div>
+      <div id="hActions" class="h-actions" hidden>
+        <button id="hRegen" class="link" type="button">Ещё вариант</button>
+        <button id="hToScript" class="link" type="button">В сценарий</button>
+        <button id="hBig" class="link" type="button">Крупно</button>
+      </div>
+      <span id="hQueue" class="hint" hidden></span>
+    </div>
+    <p class="h-heard"><span>Слышу:</span> <b id="hHeard">—</b></p>
+    <button id="hMic" class="btn-accent wide" type="button">Слушать</button>
+    <form id="hAskForm" class="h-ask">
+      <input id="hAsk" class="inp" placeholder="Или напиши вопрос" autocomplete="off" enterkeyhint="send" aria-label="Вопрос текстом">
+      <button class="btn" type="submit">Спросить</button>
+    </form>
+    <section class="set-group">
+      <h2>Настройка</h2>
+      <div class="set-card">
+        <div class="set-row">
+          <label for="hTopic">Тема разговора</label>
+          <textarea id="hTopic" class="inp" rows="2" placeholder="Например: эфир про нейросети для новичков"></textarea>
+          <p class="hint">ИИ учтёт тему и то, что написано «О тебе» в Настройках.</p>
+        </div>
+        <div class="set-row">
+          <div class="set-head"><span id="hModeL">Отвечать</span></div>
+          <div id="hMode" class="seg" role="radiogroup" aria-labelledby="hModeL">
+            <button type="button" role="radio" data-v="questions">На вопросы</button>
+            <button type="button" role="radio" data-v="all">На каждую фразу</button>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-head"><span id="hLangL">Язык собеседника</span></div>
+          <div id="hLang" class="seg" role="radiogroup" aria-labelledby="hLangL">
+            <button type="button" role="radio" data-v="ru-RU">Русский</button>
+            <button type="button" role="radio" data-v="en-US">English</button>
+          </div>
+          <p class="hint">Ответ придёт на языке вопроса.</p>
+        </div>
+      </div>
+    </section>
+    <section id="hHistWrap" class="set-group" hidden>
+      <div class="group-head"><h2>История</h2><button id="hClear" class="link danger" type="button">Очистить</button></div>
+      <div id="hHist" class="h-hist"></div>
+    </section>
   </section>
 
   <!-- Записи -->
@@ -305,12 +487,66 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
       </div>
     </section>
     <div id="settingsGroups"></div>
+
+    <section id="aiSettings" class="set-group">
+      <h2>ИИ</h2>
+      <div class="set-card">
+        <div class="set-row">
+          <div class="set-head"><span id="aiProvL">Через что работает ИИ</span></div>
+          <div id="aiProv" class="seg" role="radiogroup" aria-labelledby="aiProvL">
+            <button type="button" role="radio" data-p="none">Без ключа</button>
+            <button type="button" role="radio" data-p="gemini">Gemini</button>
+            <button type="button" role="radio" data-p="claude">Claude</button>
+            <button type="button" role="radio" data-p="openai">ChatGPT</button>
+          </div>
+          <p id="aiProvHint" class="hint"></p>
+        </div>
+        <div id="aiKeyRow" class="set-row">
+          <label for="aiKey">API-ключ</label>
+          <div class="key-row">
+            <input id="aiKey" class="inp" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Вставь ключ">
+            <button id="aiKeyShow" class="btn sm" type="button">Показать</button>
+          </div>
+          <p class="hint"><a id="aiKeyLink" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Где взять ключ</a> · ключ хранится только на этом телефоне</p>
+        </div>
+        <div id="aiModelRow" class="set-row">
+          <label for="aiModel">Модель</label>
+          <input id="aiModel" class="inp" list="aiModels" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          <datalist id="aiModels"></datalist>
+          <div class="key-row">
+            <button id="aiCheck" class="btn sm" type="button">Проверить ключ</button>
+            <p id="aiCheckRes" class="hint" role="status"></p>
+          </div>
+        </div>
+        <div class="set-row">
+          <label for="aiAbout">О тебе для ИИ</label>
+          <textarea id="aiAbout" class="inp" rows="3" placeholder="Например: блог про нейросети для новичков, говорю просто и с юмором, обращаюсь на «ты»"></textarea>
+          <p class="hint">ИИ будет писать сценарии и подсказки твоим языком.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="set-group">
+      <h2>Текст из других приложений</h2>
+      <div class="set-card"><div class="set-row">
+        <p class="about">Скопируй текст в Заметках, Telegram или ChatGPT и нажми «Вставить текст» в Сценариях — он сразу станет сценарием. Можно добавить «В Суфлёр» в меню «Поделиться».</p>
+        <div><button id="shareHelpBtn" class="link" type="button">Как добавить в «Поделиться»</button></div>
+      </div></div>
+    </section>
+
+    <section class="set-group">
+      <h2>Пульт и второй экран</h2>
+      <div class="set-card"><div class="set-row">
+        <p class="about">На экране записи нажми кнопку пульта и отсканируй QR-код вторым телефоном. Он станет пультом или экраном с текстом — удобно, когда снимаешь на основную камеру. Лучше, чтобы оба телефона были в одном Wi‑Fi.</p>
+      </div></div>
+    </section>
+
     <section class="set-group">
       <h2>О приложении</h2>
       <div class="set-card"><div class="set-row">
         <p class="about">Суфлёр работает прямо в браузере: без подписки, рекламы и водяных знаков. Сценарии, видео и фото хранятся только на этом телефоне.</p>
-        <p class="about">Режим «По голосу» использует распознавание речи iPhone: включи Siri и диктовку в Настройках, и нужен интернет.</p>
-        <p class="about">Пульт: Bluetooth-клавиатура или кликер — пробел ставит паузу, стрелки ↑↓ меняют темп, Enter включает запись.</p>
+        <p class="about">Режим «По голосу» использует распознавание речи iPhone: включи Siri и диктовку в Настройках, нужен интернет.</p>
+        <p class="about">Bluetooth-клавиатура или кликер: пробел — пауза, стрелки ↑↓ — темп, Enter — запись.</p>
         <div><button id="resetSettings" class="link" type="button">Сбросить настройки</button></div>
       </div></div>
     </section>
@@ -320,6 +556,8 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
 <nav class="tabbar" aria-label="Разделы">
   <button type="button" data-tab="scripts" aria-current="page">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>Сценарии</button>
+  <button type="button" data-tab="hints" aria-current="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16v10H11l-4.5 3.5v-3.5H4z"/><path d="M12 8.3l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8z"/></svg>Подсказки</button>
   <button type="button" data-tab="takes" aria-current="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="13.5" height="12" rx="2.5"/><path d="M16 10.5l5.5-3v9l-5.5-3z"/></svg>Записи</button>
   <button type="button" data-tab="settings" aria-current="false">
@@ -338,10 +576,57 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
     <div class="ed-foot">
       <div class="ed-meta">
         <span id="edStats">0 слов</span>
-        <label for="edFile">Загрузить .txt</label>
+        <span class="ed-tools">
+          <button id="edAi" type="button">✦ ИИ-помощник</button>
+          <label for="edFile">Загрузить .txt</label>
+        </span>
         <input id="edFile" type="file" accept=".txt,text/plain" hidden>
       </div>
       <button id="edGo" class="btn-accent wide" type="button">Читать и записывать</button>
+    </div>
+  </div>
+</div>
+
+<!-- ИИ-помощник -->
+<div id="aiSheet" class="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="aiTitle">
+    <div class="sheet-head">
+      <h2 id="aiTitle">ИИ-помощник</h2>
+      <button id="aiClose" class="icon-btn" type="button" aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div id="aiTabs" class="seg" role="radiogroup" aria-label="Что сделать">
+      <button type="button" role="radio" data-ai-tab="write">Написать</button>
+      <button type="button" role="radio" data-ai-tab="edit">Улучшить текст</button>
+    </div>
+    <div id="aiWrite" class="fld" style="gap:12px">
+      <label class="fld"><span>О чём ролик</span><textarea id="aiTopic" class="inp" rows="3" placeholder="Например: 3 ошибки, из-за которых не растёт блог"></textarea></label>
+      <div class="fld"><span id="aiLenL">Длина</span><div class="seg ai-len" role="radiogroup" aria-labelledby="aiLenL"></div></div>
+      <div class="fld"><span id="aiToneL">Тон</span><div id="aiTone" class="seg" role="radiogroup" aria-labelledby="aiToneL"></div></div>
+      <label class="check-row" for="aiHook"><span>Цепляющий хук в первой фразе</span><input id="aiHook" type="checkbox" class="switch" checked></label>
+      <button id="aiGoWrite" class="btn-accent wide" type="button">Написать сценарий</button>
+    </div>
+    <div id="aiEdit" class="fld" style="gap:12px" hidden>
+      <p class="about">ИИ поработает с текстом, который сейчас в сценарии.</p>
+      <div class="fld"><span id="aiLenL2">Длина для сокращения</span><div class="seg ai-len" role="radiogroup" aria-labelledby="aiLenL2"></div></div>
+      <div id="aiActions" class="ai-actions"></div>
+    </div>
+    <div id="aiNoKey" class="nokey" hidden>
+      <p><b style="color:var(--fg)">Запрос скопирован.</b> Открой Claude или ChatGPT, вставь его, а готовый ответ скопируй и вернись сюда.</p>
+      <div class="rv-row">
+        <a class="btn" href="https://claude.ai/new" target="_blank" rel="noopener">Открыть Claude</a>
+        <a class="btn" href="https://chatgpt.com/" target="_blank" rel="noopener">Открыть ChatGPT</a>
+      </div>
+      <button id="aiPaste" class="btn-accent" type="button">Вставить ответ</button>
+      <p>Подключи ключ в Настройках → ИИ, и всё будет писаться прямо здесь.</p>
+    </div>
+    <div id="aiOut" class="ai-out" hidden>
+      <div class="ai-out-head"><span id="aiOutLabel">Результат</span><span id="aiOutStats"></span></div>
+      <div id="aiOutText" class="ai-out-text" tabindex="0"></div>
+      <div id="aiOutBtns" class="rv-row">
+        <button id="aiReplace" class="btn-accent" type="button">Заменить текст</button>
+        <button id="aiAppend" class="btn" type="button">Добавить в конец</button>
+      </div>
+      <button id="aiRetry" class="link" type="button">Ещё вариант</button>
     </div>
   </div>
 </div>
@@ -356,6 +641,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
     <div class="top-right">
       <button id="fmtBtn" class="round fmt" type="button" aria-label="Формат кадра">9:16</button>
       <button id="mirBtn" class="round" type="button" aria-pressed="false" aria-label="Зеркалить видео и фото"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18" stroke-dasharray="2 2.6"/><path d="M9 7L3.5 17H9z"/><path d="M15 7l5.5 10H15z"/></svg></button>
+      <button id="rmBtn" class="round" type="button" aria-pressed="false" aria-label="Пульт и второй экран"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="15" rx="2.2"/><path d="M11 18.5h2M8.5 4.2a5 5 0 0 1 7 0M6.3 2a8 8 0 0 1 11.4 0"/></svg></button>
       <button id="stFlip" class="round" type="button" aria-label="Сменить камеру"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.6-4.5M4 13a8 8 0 0 0 14.6 4.5"/><path d="M5 2.5V7h4.5M19 21.5V17h-4.5"/></svg></button>
     </div>
   </div>
@@ -386,18 +672,122 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
         <button id="fsUp" type="button" aria-label="Шрифт больше">A+</button>
       </div>
     </div>
-    <div class="mode-row" role="radiogroup" aria-label="Что снимать">
+    <div id="modeRow" class="mode-row" role="radiogroup" aria-label="Что снимать">
       <button type="button" role="radio" data-mode="video" aria-checked="true">Видео</button>
       <button type="button" role="radio" data-mode="photo" aria-checked="false">Фото</button>
     </div>
     <div class="main-row">
       <button id="stRestart" class="round lg" type="button" aria-label="Текст в начало"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 3.5v4.5H9"/></svg></button>
       <button id="recBtn" class="rec" type="button" aria-label="Начать запись"><span></span></button>
-      <button id="stPlay" class="round lg" type="button" aria-label="Пустить текст">
+      <button id="stPlay" class="round lg play-btn" type="button" aria-label="Пустить текст">
         <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
         <svg class="i-pause" viewBox="0 0 24 24"><rect x="6.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/></svg>
       </button>
     </div>
+  </div>
+</div>
+
+<!-- Пульт: QR-код на суфлёре -->
+<div id="remoteSheet" class="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rmTitle">
+    <div class="sheet-head">
+      <h2 id="rmTitle">Пульт и второй экран</h2>
+      <button id="rmClose" class="icon-btn" type="button" aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <p class="about">Наведи камеру второго телефона на код. Он станет пультом или экраном с текстом — например, когда снимаешь на основную камеру.</p>
+    <div id="rmQr" class="qr-box">Готовлю код…</div>
+    <p id="rmStatus" class="rm-status">Подключаюсь…</p>
+    <div class="link-row"><code id="rmLink"></code><button id="rmCopy" class="btn sm" type="button">Копировать</button></div>
+    <label class="check-row" for="rmShowText"><span>Текст на этом экране</span><input id="rmShowText" type="checkbox" class="switch" checked></label>
+    <div class="rv-row">
+      <a id="rmOpen" class="btn" target="_blank" rel="noopener">Открыть в окне</a>
+      <button id="rmOff" class="btn" type="button">Выключить пульт</button>
+    </div>
+  </div>
+</div>
+
+<!-- Подсказки крупно -->
+<div id="hStage" hidden>
+  <div class="hs-bar">
+    <button id="hsClose" class="round" type="button" aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="grp">
+      <button id="hsMic" class="round" type="button" aria-pressed="false" aria-label="Слушать"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button>
+      <button id="hsMirror" class="round" type="button" aria-pressed="false" aria-label="Зеркалить текст"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18" stroke-dasharray="2 2.6"/><path d="M9 7L3.5 17H9z"/><path d="M15 7l5.5 10H15z"/></svg></button>
+      <div class="stepper">
+        <button id="hsDown" type="button" aria-label="Шрифт меньше">A−</button>
+        <button id="hsUp" type="button" aria-label="Шрифт больше">A+</button>
+      </div>
+    </div>
+  </div>
+  <div id="hsBody" class="hs-body"><div id="hsMirrorBox"><p id="hsQ" class="hs-q"></p><div id="hsA" class="hs-a"></div></div></div>
+</div>
+
+<!-- Пульт: второй телефон -->
+<div id="remoteApp" hidden>
+  <div class="rc-head">
+    <div class="brand"><i></i>Пульт Суфлёра</div>
+    <span id="rcConn" class="conn">Подключаюсь…</span>
+  </div>
+  <p id="rcMsg" class="rc-msg" hidden></p>
+  <div id="rcTabs" class="seg" role="radiogroup" aria-label="Режим">
+    <button type="button" role="radio" data-rc="pult" aria-checked="true">Пульт</button>
+    <button type="button" role="radio" data-rc="screen" aria-checked="false">Экран с текстом</button>
+  </div>
+  <div class="rc-status"><b id="rcState">—</b><span id="rcTitle">Жду суфлёр</span></div>
+  <div class="rc-main">
+    <div class="rc-col"><button class="rc-btn" type="button" data-cmd="back" aria-label="Назад на пару строк"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></button><span class="rc-cap">Назад</span></div>
+    <button id="rcPlay" class="rc-play play-btn" type="button" aria-label="Пустить текст">
+      <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+      <svg class="i-pause" viewBox="0 0 24 24"><rect x="6.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/></svg>
+    </button>
+    <div class="rc-col"><button class="rc-btn" type="button" data-cmd="fwd" aria-label="Вперёд на пару строк"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><span class="rc-cap">Вперёд</span></div>
+  </div>
+  <div class="rc-steps">
+    <div class="stepper">
+      <button type="button" data-cmd="slower" aria-label="Медленнее">−</button>
+      <div><b id="rcWpm">—</b><small>слов/мин</small></div>
+      <button type="button" data-cmd="faster" aria-label="Быстрее">+</button>
+    </div>
+    <div class="stepper">
+      <button type="button" data-cmd="smaller" aria-label="Шрифт меньше">A−</button>
+      <div><b id="rcFont">—</b><small>шрифт</small></div>
+      <button type="button" data-cmd="bigger" aria-label="Шрифт больше">A+</button>
+    </div>
+  </div>
+  <button class="btn" type="button" data-cmd="restart">Текст в начало</button>
+  <div class="rc-rec">
+    <div id="rcMode" class="mode-row" role="radiogroup" aria-label="Что снимать">
+      <button type="button" role="radio" data-mode="video" aria-checked="true">Видео</button>
+      <button type="button" role="radio" data-mode="photo" aria-checked="false">Фото</button>
+    </div>
+    <button id="rcRec" class="rec" type="button" aria-label="Начать запись"><span></span></button>
+  </div>
+  <details class="rc-send">
+    <summary>Отправить текст на суфлёр</summary>
+    <div class="rc-send-in">
+      <input id="rcSendTitle" class="inp" placeholder="Название" autocomplete="off">
+      <textarea id="rcSendText" class="inp" rows="5" placeholder="Вставь текст — он откроется на суфлёре"></textarea>
+      <div class="rv-row">
+        <button id="rcPasteBtn" class="btn" type="button">Из буфера</button>
+        <button id="rcSendBtn" class="btn-accent" type="button">Отправить</button>
+      </div>
+    </div>
+  </details>
+</div>
+
+<div id="rcScreen" hidden>
+  <div id="rcView" class="rc-view"><div id="rcMirror"><div id="rcText" class="ptext"></div></div><div id="rcMarker" class="marker"></div></div>
+  <div id="rcBar" class="rc-bar">
+    <button id="rcScreenClose" class="round" type="button" aria-label="Вернуться к пульту"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="stepper">
+      <button id="rcsDown" type="button" aria-label="Шрифт меньше">A−</button>
+      <button id="rcsUp" type="button" aria-label="Шрифт больше">A+</button>
+    </div>
+    <button id="rcsMirror" class="round" type="button" aria-pressed="false" aria-label="Зеркалить текст"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18" stroke-dasharray="2 2.6"/><path d="M9 7L3.5 17H9z"/><path d="M15 7l5.5 10H15z"/></svg></button>
+    <button id="rcsPlay" class="round play-btn" type="button" aria-label="Пустить текст">
+      <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+      <svg class="i-pause" viewBox="0 0 24 24"><rect x="6.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/></svg>
+    </button>
   </div>
 </div>
 
@@ -417,6 +807,27 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
   </div>
 </div>
 
+<!-- Как добавить в «Поделиться» -->
+<div id="shareHelp" class="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="shTitle">
+    <div class="sheet-head">
+      <h2 id="shTitle">«В Суфлёр» в меню «Поделиться»</h2>
+      <button id="shClose" class="icon-btn" type="button" aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <p class="about">Это бесплатная команда iPhone. Делается один раз, минуты за две.</p>
+    <ol class="steps">
+      <li>Открой приложение <b>«Команды»</b> и нажми <b>«+»</b>.</li>
+      <li>Нажми на название вверху и назови команду <b>«В Суфлёр»</b>.</li>
+      <li>Нажми <b>«Добавить действие»</b>, найди <b>«Скопировать в буфер обмена»</b> и добавь.</li>
+      <li>Ещё одно действие: <b>«Показать уведомление»</b> с текстом «Текст в Суфлёре — открой его и нажми Вставить».</li>
+      <li>Открой настройки команды: значок <b>ⓘ</b> внизу или стрелка у названия → «Подробности». Включи <b>«Показывать в Общем доступе»</b> и в «Типы» оставь только <b>«Текст»</b>.</li>
+      <li>Нажми <b>«Готово»</b>.</li>
+    </ol>
+    <p class="about">Теперь выдели текст в любом приложении → «Поделиться» → <b style="color:var(--fg)">«В Суфлёр»</b>. Открой Суфлёр и нажми «Вставить текст» — сценарий готов.</p>
+    <button id="shOk" class="btn-accent wide" type="button">Понятно</button>
+  </div>
+</div>
+
 <!-- Подтверждение -->
 <div id="confirm" class="modal" hidden>
   <div class="modal-card" role="alertdialog" aria-modal="true" aria-labelledby="cfText">
@@ -430,1207 +841,6 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radiu
 
 <div id="toast" class="toast" role="status" hidden></div>
 
-<script>
-(() => {
-'use strict';
-
-/* ---------- helpers ---------- */
-const $ = (s, r = document) => r.querySelector(s);
-const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-const fmtTime = s => { s = Math.max(0, Math.round(s || 0)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
-const fmtSize = b => b >= 1e9 ? (b / 1e9).toFixed(1).replace('.', ',') + ' ГБ' : (b / 1e6).toFixed(b < 1e7 ? 1 : 0).replace('.', ',') + ' МБ';
-const fmtDate = ts => { const d = new Date(ts); return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }).replace('.', '') + ', ' + d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }); };
-const WORD_RE = /([\p{L}\p{N}]+(?:[-'’][\p{L}\p{N}]+)*)/u;
-const countWords = t => (t.match(/[\p{L}\p{N}]+(?:[-'’][\p{L}\p{N}]+)*/gu) || []).length;
-const plural = (n, one, few, many) => { const a = n % 10, b = n % 100; return n + ' ' + (a === 1 && b !== 11 ? one : a >= 2 && a <= 4 && (b < 10 || b >= 20) ? few : many); };
-const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const marked = s => esc(s).replace(/\*([^*\n]+)\*/g, '<mark>$1</mark>');
-const norm = w => w.toLowerCase().replace(/ё/g, 'е').replace(/[^\p{L}\p{N}]/gu, '');
-const SPEAK_WPM = 130;
-const FAMILIES = {
-  golos: "'Golos Text', -apple-system, system-ui, sans-serif",
-  serif: "ui-serif, 'New York', Georgia, 'Times New Roman', serif",
-  system: "-apple-system, system-ui, 'Segoe UI', Roboto, sans-serif"
-};
-const FORMATS = { '9:16': 9 / 16, '1:1': 1, '16:9': 16 / 9 };
-const FORMAT_ORDER = ['9:16', '1:1', '16:9'];
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
-const isStandalone = () => window.navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
-
-/* script text → html with every word in its own span (voice mode follows them) */
-function renderScript(text) {
-  let html = '';
-  for (const part of text.split(/(\*[^*\n]+\*)/g)) {
-    if (!part) continue;
-    const isMark = part.length > 2 && part[0] === '*' && part[part.length - 1] === '*';
-    const body = isMark ? part.slice(1, -1) : part;
-    let h = '';
-    body.split(WORD_RE).forEach((t, i) => { if (t) h += (i % 2) ? '<span class="w">' + esc(t) + '</span>' : esc(t); });
-    html += isMark ? '<mark>' + h + '</mark>' : h;
-  }
-  return html;
-}
-
-/* ---------- toast & confirm ---------- */
-let toastTimer;
-function toast(msg, ms = 2800) {
-  const t = $('#toast');
-  t.textContent = msg;
-  t.classList.toggle('top', !$('#stage').hidden);
-  t.hidden = false;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.hidden = true; }, ms);
-}
-function ask(text, yesLabel = 'Удалить') {
-  return new Promise(res => {
-    $('#cfText').textContent = text;
-    $('#cfYes').textContent = yesLabel;
-    $('#confirm').hidden = false;
-    const done = v => { $('#confirm').hidden = true; $('#cfYes').onclick = $('#cfNo').onclick = $('#confirm').onclick = null; res(v); };
-    $('#cfYes').onclick = () => done(true);
-    $('#cfNo').onclick = () => done(false);
-    $('#confirm').onclick = e => { if (e.target.id === 'confirm') done(false); };
-  });
-}
-
-/* ---------- storage: scripts & settings ---------- */
-const KEY = 'sufler.v1';
-const DEFAULTS = {
-  font: 34, lineHeight: 1.4, family: 'golos', align: 'left',
-  scrollMode: 'time', wpm: 130, panel: 44, dim: 55, marker: true, mirrorText: false,
-  facing: 'user', quality: '1080', format: '9:16', mirrorOutput: false, capture: 'video',
-  countdown: 3, autoScroll: true, mirrorPreview: true, voiceFx: false
-};
-function sampleScript() {
-  return {
-    id: uid(), updated: Date.now(),
-    title: 'Пример: как пользоваться',
-    text: 'Привет! Это Суфлёр. Текст бежит прямо под камерой, а ты смотришь в объектив.\n\n' +
-      'Нажми на текст — он встанет на паузу. Нажми ещё раз — поедет дальше. Его можно тянуть пальцем вверх и вниз.\n\n' +
-      'Кнопка с микрофоном включает режим по голосу: текст едет, пока ты говоришь, и ждёт, когда молчишь.\n\n' +
-      'Вверху меняется формат кадра и зеркало. Внизу — видео или фото.\n\n' +
-      'Слова в *звёздочках* подсвечиваются — так удобно отмечать главное и паузы.\n\n' +
-      'Готовое видео без водяных знаков сохраняется в Фото одной кнопкой.\n\n' +
-      'Это пример. Удали его и вставь свой текст.'
-  };
-}
-function load() {
-  let d = null;
-  try { d = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
-  if (!d || !Array.isArray(d.scripts)) d = { scripts: [sampleScript()], settings: {} };
-  d.settings = Object.assign({}, DEFAULTS, d.settings || {});
-  return d;
-}
-let data = load();
-let saveFailedShown = false;
-function save() {
-  try { localStorage.setItem(KEY, JSON.stringify(data)); }
-  catch (e) { if (!saveFailedShown) { saveFailedShown = true; toast('Не получилось сохранить: память браузера недоступна'); } }
-}
-const prefs = {
-  get(k) { try { return localStorage.getItem(KEY + '.' + k); } catch (e) { return null; } },
-  set(k, v) { try { localStorage.setItem(KEY + '.' + k, v); } catch (e) {} }
-};
-const S = () => data.settings;
-
-/* ---------- storage: takes (IndexedDB) ---------- */
-const DB = (() => {
-  let p;
-  const open = () => p || (p = new Promise((res, rej) => {
-    if (!window.indexedDB) { rej(new Error('no indexedDB')); return; }
-    const r = indexedDB.open('sufler', 1);
-    r.onupgradeneeded = () => { const db = r.result; db.createObjectStore('meta', { keyPath: 'id' }); db.createObjectStore('blobs'); };
-    r.onsuccess = () => res(r.result);
-    r.onerror = () => { p = null; rej(r.error); };
-  }));
-  const run = async (stores, mode, fn) => {
-    const db = await open();
-    return new Promise((res, rej) => {
-      const t = db.transaction(stores, mode);
-      const req = fn(t);
-      t.oncomplete = () => res(req ? req.result : undefined);
-      t.onerror = t.onabort = () => rej(t.error);
-    });
-  };
-  return {
-    list: () => run(['meta'], 'readonly', t => t.objectStore('meta').getAll()),
-    blob: id => run(['blobs'], 'readonly', t => t.objectStore('blobs').get(id)),
-    add: (meta, blob) => run(['meta', 'blobs'], 'readwrite', t => { t.objectStore('blobs').put(blob, meta.id); return t.objectStore('meta').put(meta); }),
-    update: meta => run(['meta'], 'readwrite', t => t.objectStore('meta').put(meta)),
-    remove: id => run(['meta', 'blobs'], 'readwrite', t => { t.objectStore('blobs').delete(id); return t.objectStore('meta').delete(id); })
-  };
-})();
-let takes = [];
-async function loadTakes() {
-  try { takes = await DB.list(); } catch (e) { takes = []; }
-  takes.sort((a, b) => b.created - a.created);
-}
-
-/* ---------- tabs ---------- */
-const TABS = ['scripts', 'takes', 'settings'];
-function showTab(name) {
-  if (!TABS.includes(name)) name = 'scripts';
-  TABS.forEach(t => { $('#tab-' + t).hidden = t !== name; });
-  document.querySelectorAll('.tabbar button').forEach(b => b.setAttribute('aria-current', b.dataset.tab === name ? 'page' : 'false'));
-  if (name === 'scripts') renderScripts();
-  if (name === 'takes') renderTakes();
-  if (name === 'settings') { buildSettings(); renderPreview(); }
-  window.scrollTo(0, 0);
-  prefs.set('tab', name);
-}
-document.querySelectorAll('.tabbar button').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
-
-/* ---------- scripts list ---------- */
-const PLAY_SVG = '<svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
-function renderScripts() {
-  const q = $('#search').value.trim().toLowerCase();
-  const all = data.scripts.slice().sort((a, b) => b.updated - a.updated);
-  const list = all.filter(s => !q || (s.title + ' ' + s.text).toLowerCase().includes(q));
-  const box = $('#scriptList');
-  box.innerHTML = '';
-  $('#scriptsEmpty').hidden = all.length > 0;
-  $('#searchEmpty').hidden = !(all.length && !list.length);
-  $('#search').parentElement.hidden = all.length < 2;
-  for (const s of list) {
-    const w = countWords(s.text);
-    const title = s.title || 'Без названия';
-    const el = document.createElement('article');
-    el.className = 'script';
-    const preview = s.text.replace(/\*/g, '').replace(/\s+/g, ' ').trim().slice(0, 180);
-    el.innerHTML =
-      `<button class="script-open" type="button" data-open="${s.id}"><h3>${esc(title)}</h3>` +
-      `<p>${preview ? esc(preview) : 'Пустой сценарий'}</p>` +
-      `<span class="meta">${plural(w, 'слово', 'слова', 'слов')} · ≈ ${fmtTime(w / SPEAK_WPM * 60)} · ${fmtDate(s.updated)}</span></button>` +
-      `<button class="script-play" type="button" data-play="${s.id}" aria-label="Читать «${esc(title)}»"><span>${PLAY_SVG}</span></button>`;
-    box.append(el);
-  }
-}
-$('#scriptList').addEventListener('click', e => {
-  const o = e.target.closest('[data-open]'); if (o) { openEditor(o.dataset.open); return; }
-  const p = e.target.closest('[data-play]'); if (p) openStage(p.dataset.play);
-});
-$('#search').addEventListener('input', renderScripts);
-$('#newScript').addEventListener('click', newScript);
-$('#newScript2').addEventListener('click', newScript);
-
-if (!isStandalone() && prefs.get('tipHidden') !== '1') $('#installTip').hidden = false;
-$('#tipClose').addEventListener('click', () => { $('#installTip').hidden = true; prefs.set('tipHidden', '1'); });
-
-/* ---------- editor ---------- */
-let editing = null, edTimer = 0;
-function newScript() {
-  const s = { id: uid(), title: '', text: '', updated: Date.now() };
-  data.scripts.push(s);
-  save();
-  openEditor(s.id);
-  setTimeout(() => $('#edTitle').focus(), 60);
-}
-function openEditor(id) {
-  editing = data.scripts.find(s => s.id === id);
-  if (!editing) return;
-  $('#edTitle').value = editing.title;
-  $('#edText').value = editing.text;
-  updateEdStats();
-  $('#editor').hidden = false;
-  document.body.classList.add('locked');
-  $('#edText').scrollTop = 0;
-}
-function updateEdStats() {
-  const w = countWords($('#edText').value);
-  $('#edStats').textContent = plural(w, 'слово', 'слова', 'слов') + ' · ≈ ' + fmtTime(w / SPEAK_WPM * 60) + ' вслух';
-}
-function onEdit() {
-  if (!editing) return;
-  editing.title = $('#edTitle').value;
-  editing.text = $('#edText').value;
-  editing.updated = Date.now();
-  updateEdStats();
-  clearTimeout(edTimer);
-  edTimer = setTimeout(save, 400);
-}
-function closeEditor() {
-  if (!editing) return;
-  clearTimeout(edTimer);
-  editing.title = editing.title.trim();
-  if (!editing.title && !editing.text.trim()) {
-    data.scripts = data.scripts.filter(s => s !== editing);
-  } else if (!editing.title) {
-    editing.title = editing.text.replace(/\*/g, '').trim().split(/\s+/).slice(0, 5).join(' ').replace(/[.,!?;:—-]+$/, '');
-  }
-  save();
-  editing = null;
-  $('#editor').hidden = true;
-  document.body.classList.remove('locked');
-  renderScripts();
-}
-$('#edTitle').addEventListener('input', onEdit);
-$('#edText').addEventListener('input', onEdit);
-$('#edBack').addEventListener('click', closeEditor);
-$('#edGo').addEventListener('click', () => {
-  if (!editing) return;
-  if (!editing.text.trim()) { toast('Сначала вставь текст'); $('#edText').focus(); return; }
-  const id = editing.id;
-  closeEditor();
-  openStage(id);
-});
-$('#edDelete').addEventListener('click', async () => {
-  if (!editing) return;
-  if (!(await ask('Удалить сценарий «' + (editing.title || 'Без названия') + '»? Записи останутся.'))) return;
-  data.scripts = data.scripts.filter(s => s !== editing);
-  editing = null;
-  save();
-  $('#editor').hidden = true;
-  document.body.classList.remove('locked');
-  renderScripts();
-});
-$('#edFile').addEventListener('change', async e => {
-  const f = e.target.files && e.target.files[0];
-  if (!f) return;
-  try {
-    const t = await f.text();
-    const ta = $('#edText');
-    ta.value = ta.value.trim() ? ta.value + '\n\n' + t : t;
-    if (!$('#edTitle').value.trim()) $('#edTitle').value = f.name.replace(/\.[^.]+$/, '');
-    onEdit();
-  } catch (err) { toast('Не получилось прочитать файл'); }
-  e.target.value = '';
-});
-
-/* ---------- prompter stage ---------- */
-const st = {
-  script: null, offset: 0, max: 0, playing: false, last: 0, raf: 0,
-  pps: 30, cpw: 6.5, sample: '', lineH: 48, H: 0, markerY: 0, lang: 'ru-RU',
-  stream: null, rec: null, chunks: [], recStart: 0, recEnd: 0, recFormat: '9:16', recSize: null,
-  thumb: '', thumbTimer: 0, wake: null, drag: null, busy: false, cdTimer: 0, cdResolve: null, statusAt: 0
-};
-const cam = $('#cam');
-const measureCtx = document.createElement('canvas').getContext('2d');
-const isVoice = () => S().scrollMode === 'voice';
-
-function textStats(text) {
-  const clean = text.replace(/\*/g, '');
-  const w = countWords(clean);
-  const flat = clean.replace(/\s+/g, ' ').trim();
-  st.cpw = w ? flat.length / w : 6.5;
-  st.sample = flat.slice(0, 900) || 'Пример текста для замера ширины строки';
-  const cyr = (clean.match(/[а-яё]/gi) || []).length;
-  const lat = (clean.match(/[a-z]/gi) || []).length;
-  st.lang = lat > cyr ? 'en-US' : 'ru-RU';
-}
-
-function previewMirrored() {
-  const s = S();
-  return !!s.mirrorOutput || (s.facing === 'user' && s.mirrorPreview);
-}
-function layoutFrame() {
-  const s = S();
-  const ar = FORMATS[s.format] || FORMATS['9:16'];
-  const W = window.innerWidth, H = window.innerHeight;
-  const fw = Math.min(W, H * ar);
-  const f = $('#frame');
-  f.style.width = Math.round(fw) + 'px';
-  f.style.height = Math.round(fw / ar) + 'px';
-  $('#fmtBtn').textContent = s.format;
-  $('#fmtBtn').setAttribute('aria-label', 'Формат кадра ' + s.format + ', нажми, чтобы сменить');
-  cam.classList.toggle('mirror', previewMirrored());
-  $('#mirBtn').setAttribute('aria-pressed', String(!!s.mirrorOutput));
-}
-
-function layoutStage() {
-  if ($('#stage').hidden) return;
-  const s = S();
-  layoutFrame();
-  const progress = st.max ? st.offset / st.max : 0;
-  const panel = $('#panel'), pt = $('#ptext');
-  panel.style.height = Math.round(window.innerHeight * s.panel / 100) + 'px';
-  panel.style.setProperty('--dim', s.dim / 100);
-  pt.style.fontSize = s.font + 'px';
-  pt.style.lineHeight = s.lineHeight;
-  pt.style.fontFamily = FAMILIES[s.family] || FAMILIES.golos;
-  pt.style.textAlign = s.align;
-  $('#mirrorBox').style.transform = s.mirrorText ? 'scaleX(-1)' : '';
-  $('#marker').hidden = !s.marker;
-
-  st.H = $('#viewport').clientHeight;
-  st.lineH = s.font * s.lineHeight;
-  st.markerY = Math.round(clamp(st.H * 0.26, st.lineH * 0.9, st.lineH * 2.4));
-  pt.style.paddingTop = st.markerY + 'px';
-  pt.style.paddingBottom = Math.max(0, st.H - st.markerY - st.lineH) + 'px';
-  $('#marker').style.top = (st.markerY + st.lineH / 2) + 'px';
-
-  // reading pace: words per minute → pixels per second for this font and width
-  const cs = getComputedStyle(pt);
-  const innerW = pt.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-  measureCtx.font = `500 ${s.font}px ${pt.style.fontFamily}`;
-  const avgChar = measureCtx.measureText(st.sample).width / st.sample.length || s.font * 0.55;
-  const cpl = Math.max(4, (innerW / avgChar) * 0.92);
-  st.pps = (s.wpm / 60) * st.cpw * st.lineH / cpl;
-
-  st.max = Math.max(0, pt.offsetHeight - st.H);
-  measureWords();
-  if (isVoice()) { updateVoiceTarget(); st.offset = voice.target; }
-  else st.offset = clamp(progress * st.max, 0, st.max);
-  applyOffset();
-  updateSteppers();
-  updateModeUI();
-  updateStatus();
-}
-function applyOffset() {
-  $('#ptext').style.transform = 'translate3d(0,' + (-st.offset).toFixed(1) + 'px,0)';
-  $('#endNote').hidden = !(st.max > 0 && st.offset >= st.max - 0.5);
-}
-function setPlaying(on) {
-  st.playing = !!on;
-  updatePlayBtn();
-}
-function updatePlayBtn() {
-  const b = $('#stPlay');
-  const on = isVoice() ? voice.on : st.playing;
-  b.classList.toggle('on', on);
-  b.setAttribute('aria-label', isVoice() ? (on ? 'Перестать слушать' : 'Слушать голос') : (on ? 'Пауза' : 'Пустить текст'));
-}
-function togglePlay() {
-  if (isVoice()) { voice.on ? stopListening() : startListening(); return; }
-  if (!st.playing && st.offset >= st.max - 0.5) { st.offset = 0; applyOffset(); }
-  setPlaying(!st.playing);
-}
-function loop(t) {
-  st.raf = requestAnimationFrame(loop);
-  const dt = st.last ? Math.min(0.1, (t - st.last) / 1000) : 0;
-  st.last = t;
-  if (!st.drag) {
-    if (isVoice()) {
-      const d = voice.target - st.offset;
-      if (Math.abs(d) > 0.4) { st.offset += d * Math.min(1, dt * 5); applyOffset(); }
-    } else if (st.playing) {
-      st.offset += st.pps * dt;
-      if (st.offset >= st.max) { st.offset = st.max; setPlaying(false); }
-      applyOffset();
-    }
-  }
-  if (t - st.statusAt > 250) { st.statusAt = t; updateStatus(); }
-}
-function updateStatus() {
-  const pill = $('#stStatus'), txt = $('#stStatusText');
-  pill.classList.toggle('is-rec', !!st.rec);
-  pill.classList.toggle('is-voice', !st.rec && isVoice() && voice.on);
-  if (st.rec) txt.textContent = fmtTime((Date.now() - st.recStart) / 1000);
-  else if (isVoice()) txt.textContent = voice.on ? 'Слушаю' : 'Голос: нажми ▶';
-  else if (!st.max) txt.textContent = 'Готов';
-  else if (st.offset >= st.max - 0.5) txt.textContent = 'Конец текста';
-  else txt.textContent = '≈ ' + fmtTime((st.max - st.offset) / st.pps) + ' до конца';
-}
-function updateSteppers() {
-  $('#spVal').textContent = S().wpm;
-  $('#fsVal').textContent = S().font;
-}
-function updateModeUI() {
-  const s = S();
-  const voiceOn = isVoice();
-  $('#micBtn').setAttribute('aria-pressed', String(voiceOn));
-  $('#speedStepper').hidden = voiceOn;
-  const photo = s.capture === 'photo';
-  document.querySelectorAll('.mode-row button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.mode === s.capture)));
-  const rb = $('#recBtn');
-  rb.classList.toggle('photo', photo && !st.rec);
-  rb.setAttribute('aria-label', st.rec ? 'Остановить запись' : photo ? 'Сделать фото' : 'Начать запись');
-  const lock = !!(st.rec || st.busy);
-  ['#fmtBtn', '#mirBtn', '#stFlip'].forEach(q => { $(q).disabled = lock; });
-  document.querySelectorAll('.mode-row button').forEach(b => { b.disabled = lock; });
-  updatePlayBtn();
-}
-function changeWpm(d) {
-  S().wpm = clamp(S().wpm + d, 60, 300);
-  save();
-  layoutStage();
-}
-function changeFont(d) {
-  S().font = clamp(S().font + d, 20, 72);
-  save();
-  layoutStage();
-}
-
-/* ---------- voice follow ---------- */
-const voice = { rec: null, on: false, words: [], ys: [], cur: 0, target: 0, restartTimer: 0 };
-function buildWords() {
-  voice.words = Array.from(document.querySelectorAll('#ptext .w')).map(el => ({ el, n: norm(el.textContent) }));
-  voice.cur = 0;
-}
-function measureWords() {
-  voice.ys = voice.words.map(w => w.el.offsetTop);
-}
-function updateVoiceTarget() {
-  const n = voice.words.length;
-  if (!n) { voice.target = 0; return; }
-  if (voice.cur >= n) { voice.target = st.max; return; }
-  voice.target = clamp(voice.ys[voice.cur] - st.markerY, 0, st.max);
-}
-function setCursor(i) {
-  const W = voice.words;
-  i = clamp(i, 0, W.length);
-  const old = voice.cur;
-  if (i > old) for (let k = old; k < i; k++) W[k].el.classList.add('said');
-  else for (let k = i; k < old; k++) W[k].el.classList.remove('said');
-  voice.cur = i;
-  updateVoiceTarget();
-}
-function clearSaid() {
-  voice.words.forEach(w => w.el.classList.remove('said'));
-}
-function cursorFromOffset() {
-  const y = st.offset + st.markerY - st.lineH * 0.5;
-  let i = voice.ys.findIndex(v => v >= y);
-  if (i < 0) i = voice.words.length;
-  setCursor(i);
-}
-function similar(a, b) {
-  if (a === b) return true;
-  const m = Math.min(a.length, b.length);
-  if (m <= 3) return false;
-  let p = 0;
-  while (p < m && a[p] === b[p]) p++;
-  return p >= Math.min(5, m - 1);
-}
-function voiceMatch(spoken) {
-  const W = voice.words, n = W.length;
-  if (!n || !spoken.length) return;
-  const last = spoken[spoken.length - 1];
-  const prev = spoken.slice(0, -1).reverse();
-  const from = Math.max(0, voice.cur - 3), to = Math.min(n - 1, voice.cur + 30);
-  let best = -1, bestScore = -1;
-  for (let j = from; j <= to; j++) {
-    if (!similar(last, W[j].n)) continue;
-    let score = 1, k = j - 1;
-    for (const pw of prev) {
-      for (let s = k; s >= Math.max(0, k - 2); s--) {
-        if (similar(pw, W[s].n)) { score++; k = s - 1; break; }
-      }
-    }
-    score -= Math.abs(j - voice.cur) * 0.03;
-    if (score > bestScore) { bestScore = score; best = j; }
-  }
-  if (best < 0) return;
-  const near = best - voice.cur <= 2 && best - voice.cur >= -1;
-  const ok = prev.length >= 2 ? (bestScore >= 1.9 || (near && bestScore >= 0.9)) : bestScore >= 0.85;
-  if (ok && best + 1 !== voice.cur) setCursor(best + 1);
-}
-function startListening() {
-  if (!SR) { toast('Распознавание речи недоступно. На iPhone включи Siri и диктовку и открой Суфлёр в Safari', 5000); return false; }
-  if (voice.on) return true;
-  const r = new SR();
-  r.lang = st.lang;
-  r.continuous = true;
-  r.interimResults = true;
-  r.maxAlternatives = 1;
-  r.onresult = e => {
-    let txt = '';
-    for (let i = Math.max(0, e.results.length - 3); i < e.results.length; i++) txt += ' ' + e.results[i][0].transcript;
-    const words = txt.split(/\s+/).map(norm).filter(Boolean);
-    voiceMatch(words.slice(-6));
-  };
-  r.onerror = e => {
-    const err = e && e.error;
-    if (err === 'no-speech' || err === 'aborted') return;
-    stopListening();
-    if (err === 'not-allowed' || err === 'service-not-allowed') toast('Нет доступа к распознаванию речи. Включи Siri и диктовку: Настройки → Siri; и разреши Safari распознавание речи', 6000);
-    else if (err === 'network') toast('Для режима по голосу нужен интернет', 4000);
-    else if (err === 'audio-capture') toast('Микрофон занят — режим по голосу не запустился', 4000);
-    else toast('Распознавание речи остановилось. Нажми ▶, чтобы продолжить', 4000);
-  };
-  r.onend = () => {
-    if (!voice.on || voice.rec !== r) return;
-    clearTimeout(voice.restartTimer);
-    voice.restartTimer = setTimeout(() => {
-      if (!voice.on || voice.rec !== r) return;
-      try { r.start(); } catch (err) { voice.on = false; voice.rec = null; updatePlayBtn(); updateStatus(); }
-    }, 150);
-  };
-  voice.rec = r;
-  voice.on = true;
-  try { r.start(); }
-  catch (e) { voice.on = false; voice.rec = null; toast('Не получилось включить распознавание речи'); updatePlayBtn(); return false; }
-  updatePlayBtn();
-  updateStatus();
-  return true;
-}
-function stopListening() {
-  voice.on = false;
-  clearTimeout(voice.restartTimer);
-  const r = voice.rec;
-  voice.rec = null;
-  if (r) { r.onend = null; r.onresult = null; try { r.abort(); } catch (e) {} }
-  updatePlayBtn();
-  updateStatus();
-}
-function setScrollMode(m) {
-  if (m === 'voice' && !SR) { toast('Распознавание речи недоступно в этом браузере. На iPhone открой Суфлёр в Safari', 4500); return; }
-  stopListening();
-  setPlaying(false);
-  S().scrollMode = m;
-  save();
-  if (m === 'voice') cursorFromOffset(); else clearSaid();
-  updateModeUI();
-  updateStatus();
-}
-
-/* drag & tap on text */
-const vp = $('#viewport');
-vp.addEventListener('pointerdown', e => {
-  st.drag = { y: e.clientY, o: st.offset, moved: false };
-  try { vp.setPointerCapture(e.pointerId); } catch (err) {}
-});
-vp.addEventListener('pointermove', e => {
-  if (!st.drag) return;
-  const dy = e.clientY - st.drag.y;
-  if (Math.abs(dy) > 7) st.drag.moved = true;
-  if (st.drag.moved) { st.offset = clamp(st.drag.o - dy, 0, st.max); applyOffset(); updateStatus(); }
-});
-vp.addEventListener('pointerup', () => {
-  const d = st.drag;
-  st.drag = null;
-  if (!d) return;
-  if (!d.moved) togglePlay();
-  else if (isVoice()) { cursorFromOffset(); voice.target = st.offset; }
-});
-vp.addEventListener('pointercancel', () => { st.drag = null; });
-
-/* controls */
-$('#spDown').addEventListener('click', () => changeWpm(-10));
-$('#spUp').addEventListener('click', () => changeWpm(10));
-$('#fsDown').addEventListener('click', () => changeFont(-2));
-$('#fsUp').addEventListener('click', () => changeFont(2));
-$('#stPlay').addEventListener('click', togglePlay);
-$('#micBtn').addEventListener('click', () => {
-  if (isVoice()) { setScrollMode('time'); toast('Текст едет по темпу'); }
-  else { setScrollMode('voice'); if (isVoice() && startListening()) toast('Говори — текст поедет за голосом'); }
-});
-$('#stRestart').addEventListener('click', () => {
-  st.offset = 0;
-  if (isVoice()) setCursor(0);
-  applyOffset();
-  updateStatus();
-});
-$('#stClose').addEventListener('click', closeStage);
-$('#stFlip').addEventListener('click', () => {
-  if (st.rec || st.busy) return;
-  S().facing = S().facing === 'user' ? 'environment' : 'user';
-  save();
-  openCamera();
-});
-$('#fmtBtn').addEventListener('click', () => {
-  if (st.rec || st.busy) return;
-  const s = S();
-  s.format = FORMAT_ORDER[(FORMAT_ORDER.indexOf(s.format) + 1) % FORMAT_ORDER.length];
-  save();
-  layoutStage();
-  const portrait = window.innerHeight > window.innerWidth;
-  toast('Формат ' + s.format + (s.format === '16:9' && portrait ? ' — поверни телефон, так кадр будет крупнее' : ''), 2600);
-});
-$('#mirBtn').addEventListener('click', () => {
-  if (st.rec || st.busy) return;
-  S().mirrorOutput = !S().mirrorOutput;
-  save();
-  layoutFrame();
-  toast(S().mirrorOutput ? 'Видео и фото сохранятся зеркально' : 'Зеркало выключено');
-});
-document.querySelectorAll('.mode-row button').forEach(b => b.addEventListener('click', () => {
-  if (st.rec || st.busy) return;
-  S().capture = b.dataset.mode;
-  save();
-  updateModeUI();
-}));
-$('#recBtn').addEventListener('click', recToggle);
-$('#camRetry').addEventListener('click', openCamera);
-
-function openStage(id) {
-  const s = data.scripts.find(x => x.id === id);
-  if (!s) return;
-  st.script = s;
-  st.offset = 0; st.max = 0;
-  setPlaying(false);
-  $('#ptext').innerHTML = s.text.trim() ? renderScript(s.text) : '<span class="muted">Сценарий пустой. Вернись и вставь текст.</span>';
-  buildWords();
-  textStats(s.text);
-  voice.target = 0;
-  $('#stage').hidden = false;
-  document.body.classList.add('locked');
-  layoutStage();
-  openCamera();
-  keepAwake(true);
-  st.last = 0;
-  cancelAnimationFrame(st.raf);
-  st.raf = requestAnimationFrame(loop);
-}
-function closeStage() {
-  if (st.busy) cancelCountdown();
-  if (st.rec) stopRec();
-  stopListening();
-  setPlaying(false);
-  cancelAnimationFrame(st.raf);
-  stopCamera();
-  keepAwake(false);
-  $('#stage').hidden = true;
-  $('#camMsg').hidden = true;
-  if ($('#review').hidden) document.body.classList.remove('locked');
-  renderScripts();
-}
-window.addEventListener('resize', () => layoutStage());
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => layoutStage());
-
-/* ---------- camera ---------- */
-function camMessage(text) {
-  $('#camMsgText').textContent = text;
-  $('#camMsg').hidden = !text;
-}
-async function openCamera() {
-  stopCamera();
-  camMessage('');
-  if (!window.isSecureContext) { camMessage('Камера работает только по ссылке https://. Открой Суфлёр с сайта, а не из файла.'); return; }
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { camMessage('Этот браузер не даёт доступ к камере. Открой Суфлёр в Safari.'); return; }
-  const s = S();
-  const size = s.quality === '1080' ? [1920, 1080] : [1280, 720];
-  const audio = s.voiceFx
-    ? { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
-    : { echoCancellation: false, noiseSuppression: false, autoGainControl: false };
-  let stream = null;
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: s.facing, width: { ideal: size[0] }, height: { ideal: size[1] }, frameRate: { ideal: 30 } },
-      audio
-    });
-  } catch (e) {
-    try { stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: s.facing }, audio: true }); }
-    catch (e2) {
-      camMessage(e2 && e2.name === 'NotAllowedError'
-        ? 'Нет доступа к камере и микрофону. На iPhone: Настройки → Safari → Камера и Микрофон → «Разрешить». Потом нажми кнопку ниже.'
-        : 'Камера не включилась. Закрой другие приложения с камерой и попробуй снова.');
-      return;
-    }
-  }
-  if ($('#stage').hidden) { stream.getTracks().forEach(t => t.stop()); return; }
-  st.stream = stream;
-  const a = stream.getAudioTracks()[0];
-  if (a) a.onmute = () => {
-    if (st.rec && voice.on) {
-      stopListening();
-      toast('iPhone отдал микрофон распознаванию — выключила голос, чтобы в видео был звук. Текст поедет по темпу', 6000);
-      setScrollMode('time');
-      setPlaying(true);
-    }
-  };
-  cam.srcObject = stream;
-  layoutFrame();
-  try { await cam.play(); } catch (e) {}
-}
-function stopCamera() {
-  if (st.stream) { st.stream.getTracks().forEach(t => t.stop()); st.stream = null; }
-  cam.srcObject = null;
-}
-function cameraAlive() {
-  if (!st.stream) return false;
-  const v = st.stream.getVideoTracks()[0];
-  return !!v && v.readyState === 'live';
-}
-async function keepAwake(on) {
-  try {
-    if (on && 'wakeLock' in navigator && document.visibilityState === 'visible') {
-      st.wake = await navigator.wakeLock.request('screen');
-    } else if (!on && st.wake) { await st.wake.release(); st.wake = null; }
-  } catch (e) {}
-}
-document.addEventListener('visibilitychange', () => {
-  if ($('#stage').hidden) return;
-  if (document.visibilityState === 'hidden') {
-    if (st.busy) cancelCountdown();
-    if (st.rec) stopRec();
-    stopListening();
-    setPlaying(false);
-  } else {
-    keepAwake(true);
-    if (!cameraAlive()) openCamera();
-  }
-});
-
-/* ---------- framing: crop to format + mirror ---------- */
-function cropRect(vw, vh, ar) {
-  let cw, ch;
-  if (vw / vh > ar) { ch = vh; cw = vh * ar; } else { cw = vw; ch = vw / ar; }
-  return { sx: (vw - cw) / 2, sy: (vh - ch) / 2, cw, ch };
-}
-function drawFrame(ctx, w, h, mirror) {
-  const vw = cam.videoWidth, vh = cam.videoHeight;
-  if (!vw || !vh) return false;
-  const r = cropRect(vw, vh, w / h);
-  ctx.save();
-  if (mirror) { ctx.translate(w, 0); ctx.scale(-1, 1); }
-  ctx.drawImage(cam, r.sx, r.sy, r.cw, r.ch, 0, 0, w, h);
-  ctx.restore();
-  return true;
-}
-function outputSize(format) {
-  const r = cropRect(cam.videoWidth, cam.videoHeight, FORMATS[format]);
-  let w = Math.round(r.cw), h = Math.round(r.ch);
-  w -= w % 2; h -= h % 2;
-  return { w, h };
-}
-function needsPipeline() {
-  if (!cam.videoWidth) return false;
-  const native = cam.videoWidth / cam.videoHeight;
-  return !!S().mirrorOutput || Math.abs(native - FORMATS[S().format]) > 0.01;
-}
-const pipe = { on: false, stream: null, raf: 0, vfc: 0 };
-function startPipeline() {
-  const c = $('#recCanvas');
-  if (!c.captureStream) throw new Error('captureStream not supported');
-  const { w, h } = outputSize(S().format);
-  c.width = w; c.height = h;
-  const ctx = c.getContext('2d');
-  const mirror = !!S().mirrorOutput;
-  pipe.on = true;
-  const step = () => {
-    if (!pipe.on) return;
-    drawFrame(ctx, w, h, mirror);
-    if (cam.requestVideoFrameCallback) pipe.vfc = cam.requestVideoFrameCallback(step);
-    else pipe.raf = requestAnimationFrame(step);
-  };
-  step();
-  pipe.stream = c.captureStream(30);
-  st.recSize = { w, h };
-  return new MediaStream([...pipe.stream.getVideoTracks(), ...st.stream.getAudioTracks()]);
-}
-function stopPipeline() {
-  pipe.on = false;
-  cancelAnimationFrame(pipe.raf);
-  if (pipe.vfc && cam.cancelVideoFrameCallback) { try { cam.cancelVideoFrameCallback(pipe.vfc); } catch (e) {} }
-  if (pipe.stream) pipe.stream.getVideoTracks().forEach(t => t.stop());
-  pipe.stream = null;
-}
-
-/* ---------- recording ---------- */
-function pickMime() {
-  if (!window.MediaRecorder || !MediaRecorder.isTypeSupported) return '';
-  const list = ['video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
-  for (const m of list) { try { if (MediaRecorder.isTypeSupported(m)) return m; } catch (e) {} }
-  return '';
-}
-function countdown(n) {
-  return new Promise(res => {
-    const box = $('#countdown'), num = $('#cdNum');
-    let i = n;
-    box.hidden = false;
-    st.cdResolve = res;
-    const tick = () => {
-      if (i === 0) { box.hidden = true; st.cdResolve = null; res(true); return; }
-      num.textContent = i;
-      num.classList.remove('pop'); void num.offsetWidth; num.classList.add('pop');
-      i--;
-      st.cdTimer = setTimeout(tick, 1000);
-    };
-    tick();
-  });
-}
-function cancelCountdown() {
-  clearTimeout(st.cdTimer);
-  $('#countdown').hidden = true;
-  if (st.cdResolve) { const r = st.cdResolve; st.cdResolve = null; r(false); }
-}
-$('#countdown').addEventListener('click', cancelCountdown);
-
-function recToggle() {
-  if (st.busy) return;
-  if (st.rec) { stopRec(); return; }
-  if (S().capture === 'photo') takePhoto(); else startRec();
-}
-async function startRec() {
-  if (!cameraAlive()) { toast('Камера не включена'); openCamera(); return; }
-  if (!window.MediaRecorder) { toast('Этот браузер не умеет записывать видео. Нужен iOS 14.5 или новее'); return; }
-  // voice recognition must start inside the tap itself
-  if (isVoice() && S().autoScroll) startListening();
-  st.busy = true;
-  setPlaying(false);
-  if (!isVoice() && st.offset >= st.max - 0.5) { st.offset = 0; applyOffset(); }
-  updateModeUI();
-  const n = +S().countdown;
-  if (n > 0) {
-    const go = await countdown(n);
-    if (!go || !cameraAlive()) { st.busy = false; updateModeUI(); return; }
-  }
-  let source = st.stream;
-  st.recSize = { w: cam.videoWidth, h: cam.videoHeight };
-  if (needsPipeline()) {
-    try { source = startPipeline(); }
-    catch (e) { stopPipeline(); source = st.stream; st.recSize = { w: cam.videoWidth, h: cam.videoHeight }; toast('Формат и зеркало не применились — запишу кадр как есть', 4000); }
-  }
-  const mime = pickMime();
-  const opts = { videoBitsPerSecond: S().quality === '1080' ? 10000000 : 5000000, audioBitsPerSecond: 128000 };
-  if (mime) opts.mimeType = mime;
-  let rec;
-  try { rec = new MediaRecorder(source, opts); }
-  catch (e) {
-    try { rec = new MediaRecorder(source); }
-    catch (e2) { stopPipeline(); toast('Не получилось начать запись'); st.busy = false; updateModeUI(); return; }
-  }
-  st.chunks = [];
-  rec.ondataavailable = e => { if (e.data && e.data.size) st.chunks.push(e.data); };
-  rec.onstop = () => finishRec(rec);
-  try { rec.start(); }
-  catch (e) { stopPipeline(); toast('Не получилось начать запись'); st.busy = false; updateModeUI(); return; }
-  st.rec = rec;
-  st.recStart = Date.now();
-  st.recFormat = S().format;
-  st.thumb = '';
-  clearTimeout(st.thumbTimer);
-  st.thumbTimer = setTimeout(() => { st.thumb = grabThumb(); }, 900);
-  $('#stage').classList.add('recording');
-  if (!isVoice() && S().autoScroll) setPlaying(true);
-  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
-  st.busy = false;
-  updateModeUI();
-  updateStatus();
-}
-function stopRec() {
-  const rec = st.rec;
-  if (!rec) return;
-  st.recEnd = Date.now();
-  if (!st.thumb) st.thumb = grabThumb();
-  clearTimeout(st.thumbTimer);
-  setPlaying(false);
-  stopListening();
-  try { if (rec.state !== 'inactive') rec.stop(); else finishRec(rec); } catch (e) { finishRec(rec); }
-}
-function makeThumb(format) {
-  if (!cam.videoWidth) return '';
-  const ar = FORMATS[format] || FORMATS['9:16'];
-  const w = ar >= 1 ? 360 : 270, h = Math.round(w / ar);
-  const c = document.createElement('canvas');
-  c.width = w; c.height = h;
-  try { drawFrame(c.getContext('2d'), w, h, !!S().mirrorOutput); return c.toDataURL('image/jpeg', 0.72); } catch (e) { return ''; }
-}
-function grabThumb() { return makeThumb(st.recFormat || S().format); }
-async function finishRec(rec) {
-  if (rec._done) return;
-  rec._done = true;
-  stopPipeline();
-  const type = ((rec.mimeType || (st.chunks[0] && st.chunks[0].type) || 'video/mp4').split(';')[0]) || 'video/mp4';
-  const blob = new Blob(st.chunks, { type });
-  st.chunks = [];
-  st.rec = null;
-  $('#stage').classList.remove('recording');
-  updateModeUI();
-  updateStatus();
-  if (!blob.size) { toast('Запись получилась пустой. Попробуй ещё раз'); return; }
-  const script = st.script || { id: '', title: 'Без названия' };
-  const n = takes.filter(t => t.scriptId === script.id && t.kind !== 'photo').length + 1;
-  const meta = {
-    id: uid(), kind: 'video', scriptId: script.id, title: script.title || 'Без названия', take: n,
-    created: st.recStart, duration: Math.max(0, ((st.recEnd || Date.now()) - st.recStart) / 1000),
-    size: blob.size, type, thumb: st.thumb || '', saved: false,
-    format: st.recFormat, w: st.recSize ? st.recSize.w : 0, h: st.recSize ? st.recSize.h : 0, mirrored: !!S().mirrorOutput
-  };
-  try { await DB.add(meta, blob); takes.unshift(meta); }
-  catch (e) { toast('Не хватило места, чтобы оставить запись в приложении. Сохрани её в Фото сейчас', 5000); }
-  openReview(meta, blob, !$('#stage').hidden);
-}
-
-/* ---------- photo ---------- */
-async function takePhoto() {
-  if (!cameraAlive() || !cam.videoWidth) { toast('Камера не включена'); openCamera(); return; }
-  st.busy = true;
-  updateModeUI();
-  const n = +S().countdown;
-  if (n > 0) {
-    const go = await countdown(n);
-    if (!go || !cameraAlive()) { st.busy = false; updateModeUI(); return; }
-  }
-  const format = S().format;
-  const { w, h } = outputSize(format);
-  const c = document.createElement('canvas');
-  c.width = w; c.height = h;
-  drawFrame(c.getContext('2d'), w, h, !!S().mirrorOutput);
-  const fl = $('#flash');
-  fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
-  const thumb = makeThumb(format);
-  const blob = await new Promise(r => { try { c.toBlob(r, 'image/jpeg', 0.92); } catch (e) { r(null); } });
-  st.busy = false;
-  updateModeUI();
-  if (!blob) { toast('Фото не получилось. Попробуй ещё раз'); return; }
-  const script = st.script || { id: '', title: 'Без названия' };
-  const num = takes.filter(t => t.scriptId === script.id && t.kind === 'photo').length + 1;
-  const meta = {
-    id: uid(), kind: 'photo', scriptId: script.id, title: script.title || 'Без названия', take: num,
-    created: Date.now(), duration: 0, size: blob.size, type: 'image/jpeg', thumb, saved: false,
-    format, w, h, mirrored: !!S().mirrorOutput
-  };
-  try { await DB.add(meta, blob); takes.unshift(meta); }
-  catch (e) { toast('Не хватило места, чтобы оставить фото в приложении. Сохрани его в Фото сейчас', 5000); }
-  openReview(meta, blob, !$('#stage').hidden);
-}
-
-/* ---------- review ---------- */
-let rv = null;
-function fileName(meta) {
-  const d = new Date(meta.created);
-  const p = x => String(x).padStart(2, '0');
-  const ext = meta.kind === 'photo' ? 'jpg' : /webm/.test(meta.type) ? 'webm' : 'mp4';
-  return `Sufler_${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}_${p(d.getHours())}-${p(d.getMinutes())}-${p(d.getSeconds())}.${ext}`;
-}
-function takeLabel(meta) {
-  return meta.title + (meta.kind === 'photo' ? ' · фото ' : ' · дубль ') + meta.take;
-}
-function openReview(meta, blob, fromStage) {
-  releaseReview();
-  let file = null;
-  try { file = new File([blob], fileName(meta), { type: blob.type || meta.type }); } catch (e) {}
-  rv = { meta, blob, file, url: URL.createObjectURL(blob), fromStage };
-  const photo = meta.kind === 'photo';
-  const v = $('#rvVideo'), img = $('#rvImg');
-  v.hidden = photo; img.hidden = !photo;
-  if (photo) img.src = rv.url; else v.src = rv.url;
-  $('#rvTitle').textContent = takeLabel(meta);
-  const bits = [];
-  if (!photo) bits.push(fmtTime(meta.duration));
-  if (meta.format) bits.push(meta.format + (meta.mirrored ? ', зеркально' : ''));
-  bits.push(fmtSize(meta.size), fmtDate(meta.created));
-  $('#rvInfo').textContent = bits.join(' · ');
-  $('#rvSaved').hidden = !meta.saved;
-  $('#rvAgain').hidden = !fromStage;
-  $('#rvAgain').textContent = photo ? 'Ещё фото' : 'Ещё дубль';
-  $('#review').hidden = false;
-  document.body.classList.add('locked');
-}
-function releaseReview() {
-  if (!rv) return;
-  const v = $('#rvVideo');
-  v.pause();
-  v.removeAttribute('src');
-  v.load();
-  $('#rvImg').removeAttribute('src');
-  URL.revokeObjectURL(rv.url);
-  rv = null;
-}
-function closeReview() {
-  releaseReview();
-  $('#review').hidden = true;
-  if ($('#stage').hidden) document.body.classList.remove('locked');
-  if (!$('#tab-takes').hidden) renderTakes();
-}
-$('#rvClose').addEventListener('click', closeReview);
-$('#rvAgain').addEventListener('click', () => {
-  const photo = rv && rv.meta.kind === 'photo';
-  closeReview();
-  if (photo) return;
-  st.offset = 0;
-  if (isVoice()) setCursor(0);
-  applyOffset();
-  updateStatus();
-});
-$('#rvSave').addEventListener('click', async () => {
-  if (!rv) return;
-  const cur = rv;
-  if (cur.file && navigator.canShare && navigator.canShare({ files: [cur.file] })) {
-    try {
-      await navigator.share({ files: [cur.file] });
-      markSaved(cur.meta);
-      return;
-    } catch (e) { if (e && e.name === 'AbortError') return; }
-  }
-  const a = document.createElement('a');
-  a.href = cur.url;
-  a.download = cur.file ? cur.file.name : fileName(cur.meta);
-  document.body.append(a);
-  a.click();
-  a.remove();
-  markSaved(cur.meta);
-  toast('Файл скачан. На iPhone он в «Файлах» → «Загрузки»', 4000);
-});
-function markSaved(meta) {
-  meta.saved = true;
-  DB.update(meta).catch(() => {});
-  if (rv && rv.meta === meta) $('#rvSaved').hidden = false;
-}
-$('#rvDelete').addEventListener('click', async () => {
-  if (!rv) return;
-  const meta = rv.meta;
-  if (!(await ask('Удалить «' + takeLabel(meta) + '»? Вернуть не получится.'))) return;
-  try { await DB.remove(meta.id); } catch (e) {}
-  takes = takes.filter(t => t.id !== meta.id);
-  closeReview();
-  toast('Удалено');
-});
-$('#review').addEventListener('click', e => { if (e.target.id === 'review') closeReview(); });
-
-/* ---------- takes grid ---------- */
-const CAM_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="13.5" height="12" rx="2.5"/><path d="M16 10.5l5.5-3v9l-5.5-3z"/></svg>';
-async function renderTakes() {
-  await loadTakes();
-  const grid = $('#takeGrid');
-  grid.innerHTML = '';
-  $('#takesEmpty').hidden = takes.length > 0;
-  const total = takes.reduce((a, t) => a + (t.size || 0), 0);
-  $('#takesInfo').textContent = takes.length ? plural(takes.length, 'запись', 'записи', 'записей') + ' · ' + fmtSize(total) : '';
-  for (const t of takes) {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'take';
-    b.dataset.id = t.id;
-    const photo = t.kind === 'photo';
-    b.innerHTML =
-      (t.thumb ? `<img src="${t.thumb}" alt="">` : `<span class="noimg">${CAM_SVG}</span>`) +
-      `<span class="chip">${photo ? 'Фото' : fmtTime(t.duration)}${t.format && t.format !== '9:16' ? ' · ' + t.format : ''}</span>` +
-      (t.saved ? '<span class="chip saved">✓ сохранено</span>' : '') +
-      `<span class="cap"><b>${esc(t.title)}</b><span>${photo ? 'фото' : 'дубль'} ${t.take} · ${fmtDate(t.created)}</span></span>`;
-    grid.append(b);
-  }
-}
-$('#takeGrid').addEventListener('click', async e => {
-  const b = e.target.closest('.take');
-  if (!b) return;
-  const meta = takes.find(t => t.id === b.dataset.id);
-  if (!meta) return;
-  let blob = null;
-  try { blob = await DB.blob(meta.id); } catch (err) {}
-  if (!blob) { toast('Файл не найден — возможно, браузер очистил память'); return; }
-  openReview(meta, blob, false);
-});
-
-/* ---------- settings ---------- */
-const SETTINGS_UI = [
-  { group: 'Как едет текст', items: [
-    { key: 'scrollMode', type: 'seg', label: 'Прокрутка', options: [['time', 'По темпу'], ['voice', 'По голосу']], hint: 'По голосу: текст едет, пока ты говоришь, и ждёт, когда молчишь. Нужны Siri, диктовка и интернет.' },
-    { key: 'wpm', type: 'range', label: 'Темп чтения', min: 60, max: 300, step: 10, fmt: v => v + ' слов/мин', hint: 'Для режима по темпу. Обычная речь — около 130.' },
-    { key: 'autoScroll', type: 'toggle', label: 'Запускать текст вместе с записью' }
-  ] },
-  { group: 'Текст', items: [
-    { key: 'font', type: 'range', label: 'Размер шрифта', min: 20, max: 72, step: 1, fmt: v => v + ' px' },
-    { key: 'lineHeight', type: 'range', label: 'Межстрочный интервал', min: 1.1, max: 2, step: 0.05, fmt: v => (+v).toFixed(2).replace('.', ',') },
-    { key: 'family', type: 'seg', label: 'Шрифт', options: [['golos', 'Гротеск'], ['serif', 'С засечками'], ['system', 'Системный']] },
-    { key: 'align', type: 'seg', label: 'Выравнивание', options: [['left', 'Слева'], ['center', 'По центру']] }
-  ] },
-  { group: 'Окно суфлёра', items: [
-    { key: 'panel', type: 'range', label: 'Высота окна с текстом', min: 25, max: 75, step: 1, fmt: v => v + '%' },
-    { key: 'dim', type: 'range', label: 'Затемнение под текстом', min: 0, max: 90, step: 5, fmt: v => v + '%' },
-    { key: 'marker', type: 'toggle', label: 'Метка строки чтения' },
-    { key: 'mirrorText', type: 'toggle', label: 'Зеркалить текст', hint: 'Для суфлёра со стеклом перед камерой.' }
-  ] },
-  { group: 'Камера и запись', items: [
-    { key: 'format', type: 'seg', label: 'Формат кадра', options: [['9:16', '9:16'], ['1:1', '1:1'], ['16:9', '16:9']], hint: '9:16 — Reels, TikTok, Shorts. 1:1 — лента. 16:9 — YouTube, лучше снимать горизонтально.' },
-    { key: 'mirrorOutput', type: 'toggle', label: 'Зеркалить видео и фото', hint: 'Сохранённые файлы будут отражены, как в зеркале.' },
-    { key: 'facing', type: 'seg', label: 'Камера', options: [['user', 'Фронтальная'], ['environment', 'Основная']] },
-    { key: 'quality', type: 'seg', label: 'Качество', options: [['720', '720p'], ['1080', '1080p']] },
-    { key: 'countdown', type: 'seg', label: 'Отсчёт перед съёмкой', options: [[0, 'Нет'], [3, '3 сек'], [5, '5 сек']] },
-    { key: 'mirrorPreview', type: 'toggle', label: 'Зеркальное превью фронталки', hint: 'Только на экране. Как сохранится файл — решает «Зеркалить видео и фото».' },
-    { key: 'voiceFx', type: 'toggle', label: 'Шумоподавление', hint: 'Выключи, если пишешь звук на петличку — так голос чище.' }
-  ] }
-];
-function buildSettings() {
-  const root = $('#settingsGroups');
-  root.innerHTML = '';
-  for (const g of SETTINGS_UI) {
-    const sec = document.createElement('section');
-    sec.className = 'set-group';
-    sec.innerHTML = `<h2>${g.group}</h2>`;
-    const card = document.createElement('div');
-    card.className = 'set-card';
-    sec.append(card);
-    for (const it of g.items) {
-      const row = document.createElement('div');
-      row.className = 'set-row';
-      const id = 'set-' + it.key;
-      const v = S()[it.key];
-      const hint = it.hint ? `<p class="hint">${it.hint}</p>` : '';
-      if (it.type === 'range') {
-        row.innerHTML = `<div class="set-head"><label for="${id}">${it.label}</label><output id="${id}-v" class="set-val" for="${id}">${it.fmt(v)}</output></div>` +
-          `<input type="range" id="${id}" min="${it.min}" max="${it.max}" step="${it.step}" value="${v}">${hint}`;
-        row.querySelector('input').addEventListener('input', e => {
-          const nv = parseFloat(e.target.value);
-          setSetting(it.key, nv);
-          row.querySelector('output').textContent = it.fmt(nv);
-        });
-      } else if (it.type === 'seg') {
-        row.innerHTML = `<div class="set-head"><span id="${id}-l">${it.label}</span></div>` +
-          `<div class="seg" role="radiogroup" aria-labelledby="${id}-l">` +
-          it.options.map((o, i) => `<button type="button" role="radio" id="${id}-${i}" data-i="${i}" aria-checked="${String(o[0]) === String(v)}">${o[1]}</button>`).join('') +
-          `</div>${hint}`;
-        row.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
-          const val = it.options[+b.dataset.i][0];
-          if (it.key === 'scrollMode' && val === 'voice' && !SR) { toast('Распознавание речи недоступно в этом браузере. На iPhone открой Суфлёр в Safari', 4500); return; }
-          setSetting(it.key, val);
-          row.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-checked', String(x === b)));
-        }));
-      } else {
-        row.innerHTML = `<div class="set-head"><label for="${id}">${it.label}</label><input type="checkbox" class="switch" id="${id}" ${v ? 'checked' : ''}></div>${hint}`;
-        row.querySelector('input').addEventListener('change', e => setSetting(it.key, e.target.checked));
-      }
-      card.append(row);
-    }
-    root.append(sec);
-  }
-}
-function setSetting(k, v) {
-  S()[k] = v;
-  save();
-  renderPreview();
-}
-function renderPreview() {
-  const s = S();
-  const t = $('#pvText');
-  t.innerHTML = marked('Смотри в камеру, а *текст* бежит сам.');
-  t.style.fontSize = s.font + 'px';
-  t.style.lineHeight = s.lineHeight;
-  t.style.fontFamily = FAMILIES[s.family] || FAMILIES.golos;
-  t.style.textAlign = s.align;
-  t.style.transform = s.mirrorText ? 'scaleX(-1)' : '';
-  const lh = s.font * s.lineHeight;
-  $('#preview').style.setProperty('--dim', s.dim / 100);
-  const m = $('#pvMarker');
-  m.hidden = !s.marker;
-  m.style.top = (14 + lh / 2) + 'px';
-}
-$('#resetSettings').addEventListener('click', async () => {
-  if (!(await ask('Вернуть все настройки как было? Сценарии и записи не тронем.', 'Сбросить'))) return;
-  data.settings = Object.assign({}, DEFAULTS);
-  save();
-  buildSettings();
-  renderPreview();
-  toast('Настройки сброшены');
-});
-
-/* ---------- keyboard / remote ---------- */
-document.addEventListener('keydown', e => {
-  if (!$('#confirm').hidden) { if (e.key === 'Escape') $('#cfNo').click(); return; }
-  if (!$('#review').hidden) { if (e.key === 'Escape') closeReview(); return; }
-  if ($('#stage').hidden) { if (e.key === 'Escape' && !$('#editor').hidden) closeEditor(); return; }
-  if (e.target.closest && e.target.closest('input, textarea')) return;
-  switch (e.key) {
-    case ' ': case 'PageDown': case 'ArrowRight': e.preventDefault(); togglePlay(); break;
-    case 'ArrowUp': e.preventDefault(); changeWpm(10); break;
-    case 'ArrowDown': e.preventDefault(); changeWpm(-10); break;
-    case 'PageUp': case 'ArrowLeft':
-      e.preventDefault();
-      st.offset = clamp(st.offset - st.lineH * 2, 0, st.max);
-      if (isVoice()) { cursorFromOffset(); voice.target = st.offset; }
-      applyOffset();
-      break;
-    case 'Enter': e.preventDefault(); recToggle(); break;
-    case 'Escape': closeStage(); break;
-  }
-});
-
-/* self-test hook, only with ?selftest in the address */
-if (location.search.includes('selftest')) {
-  window.__sufler = {
-    say: words => voiceMatch(words.map(norm)),
-    state: () => ({ cur: voice.cur, total: voice.words.length, target: Math.round(voice.target), offset: Math.round(st.offset), mode: S().scrollMode, lang: st.lang })
-  };
-}
-
-/* ---------- start ---------- */
-buildSettings();
-renderPreview();
-showTab(prefs.get('tab') || 'scripts');
-loadTakes();
-})();
-</script>
+<script src="app.js?v=4"></script>
 </body>
 </html>
